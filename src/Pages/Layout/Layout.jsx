@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box } from '@mui/joy';
+import React, { useState } from 'react';
+import { Box, Grid } from '@mui/joy';
 import JobsCard from '../../Components/JobsCard/JobsCard';
 import { css } from '@emotion/react';
 let jobs = [
@@ -980,6 +980,7 @@ let jobs = [
   },
 ];
 const Layout = () => {
+  const [filteredJobs, setFilteredJobs] = useState(jobs.splice(0, 3));
   const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -1120,7 +1121,9 @@ const Layout = () => {
   return (
     <Grid>
       <Box item md={12} sx={styles}>
-        {jobs?.map(jd => console.log(jd))}
+        {filteredJobs?.map(jd => (
+          <JobsCard key={jd.jdUid} jobDetails={jd} />
+        ))}
       </Box>
     </Grid>
   );
