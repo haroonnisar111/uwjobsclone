@@ -999,7 +999,7 @@ const Layout = () => {
       padding: 0,
     },
   });
-
+  //function for filters
   const filterJobs = useMemo(() => {
     return job => {
       return Object.entries(filters).every(([key, value]) => {
@@ -1028,7 +1028,7 @@ const Layout = () => {
     const updatedFilteredJobs = jobs.filter(filterJobs);
     setFilteredJobs(updatedFilteredJobs);
   }, [filters]);
-
+  //values for drop downs
   const jobroles = ['frontend', 'backend', 'android', 'ios'];
   const exp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const location = [
@@ -1040,14 +1040,12 @@ const Layout = () => {
     'chennai',
   ];
   const basePay = [3, 9, 10, 14, 16, 18, 26, 33, 34, 35, 44, 72, 66, 100, 102];
-
+  //function for infinite scroll
   const handleScroll = () => {
-    debugger;
     const startIndex = (currentPage + 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
-    if (startIndex < jobs.length) {
-      debugger;
+    if (startIndex < jobs.length && hasMoreData) {
       const nextPageItems = jobs.slice(startIndex, endIndex);
 
       setFilteredJobs(prevJobs => [...prevJobs, ...nextPageItems]);
