@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Grid } from '@mui/joy';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Box, Grid, Option, Select, Stack } from '@mui/joy';
+import TextField from '@mui/material/TextField';
+
 import JobsCard from '../../Components/JobsCard/JobsCard';
+import CustomAutoComplete from '../../Components/CustomAutoComplete/CustomAutoComplete';
 import { css } from '@emotion/react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 let jobs = [
   {
     jdUid: 'cfff35ac-053c-11ef-83d3-06301d0a7178-92010',
@@ -980,134 +984,12 @@ let jobs = [
   },
 ];
 const Layout = () => {
-  const [filteredJobs, setFilteredJobs] = useState(jobs.splice(0, 3));
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-    {
-      title: 'The Lord of the Rings: The Return of the King',
-      year: 2003,
-    },
-    { title: 'The Good, the Bad and the Ugly', year: 1966 },
-    { title: 'Fight Club', year: 1999 },
-    {
-      title: 'The Lord of the Rings: The Fellowship of the Ring',
-      year: 2001,
-    },
-    {
-      title: 'Star Wars: Episode V - The Empire Strikes Back',
-      year: 1980,
-    },
-    { title: 'Forrest Gump', year: 1994 },
-    { title: 'Inception', year: 2010 },
-    {
-      title: 'The Lord of the Rings: The Two Towers',
-      year: 2002,
-    },
-    { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-    { title: 'Goodfellas', year: 1990 },
-    { title: 'The Matrix', year: 1999 },
-    { title: 'Seven Samurai', year: 1954 },
-    {
-      title: 'Star Wars: Episode IV - A New Hope',
-      year: 1977,
-    },
-    { title: 'City of God', year: 2002 },
-    { title: 'Se7en', year: 1995 },
-    { title: 'The Silence of the Lambs', year: 1991 },
-    { title: "It's a Wonderful Life", year: 1946 },
-    { title: 'Life Is Beautiful', year: 1997 },
-    { title: 'The Usual Suspects', year: 1995 },
-    { title: 'Léon: The Professional', year: 1994 },
-    { title: 'Spirited Away', year: 2001 },
-    { title: 'Saving Private Ryan', year: 1998 },
-    { title: 'Once Upon a Time in the West', year: 1968 },
-    { title: 'American History X', year: 1998 },
-    { title: 'Interstellar', year: 2014 },
-    { title: 'Casablanca', year: 1942 },
-    { title: 'City Lights', year: 1931 },
-    { title: 'Psycho', year: 1960 },
-    { title: 'The Green Mile', year: 1999 },
-    { title: 'The Intouchables', year: 2011 },
-    { title: 'Modern Times', year: 1936 },
-    { title: 'Raiders of the Lost Ark', year: 1981 },
-    { title: 'Rear Window', year: 1954 },
-    { title: 'The Pianist', year: 2002 },
-    { title: 'The Departed', year: 2006 },
-    { title: 'Terminator 2: Judgment Day', year: 1991 },
-    { title: 'Back to the Future', year: 1985 },
-    { title: 'Whiplash', year: 2014 },
-    { title: 'Gladiator', year: 2000 },
-    { title: 'Memento', year: 2000 },
-    { title: 'The Prestige', year: 2006 },
-    { title: 'The Lion King', year: 1994 },
-    { title: 'Apocalypse Now', year: 1979 },
-    { title: 'Alien', year: 1979 },
-    { title: 'Sunset Boulevard', year: 1950 },
-    {
-      title:
-        'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb',
-      year: 1964,
-    },
-    { title: 'The Great Dictator', year: 1940 },
-    { title: 'Cinema Paradiso', year: 1988 },
-    { title: 'The Lives of Others', year: 2006 },
-    { title: 'Grave of the Fireflies', year: 1988 },
-    { title: 'Paths of Glory', year: 1957 },
-    { title: 'Django Unchained', year: 2012 },
-    { title: 'The Shining', year: 1980 },
-    { title: 'WALL·E', year: 2008 },
-    { title: 'American Beauty', year: 1999 },
-    { title: 'The Dark Knight Rises', year: 2012 },
-    { title: 'Princess Mononoke', year: 1997 },
-    { title: 'Aliens', year: 1986 },
-    { title: 'Oldboy', year: 2003 },
-    { title: 'Once Upon a Time in America', year: 1984 },
-    { title: 'Witness for the Prosecution', year: 1957 },
-    { title: 'Das Boot', year: 1981 },
-    { title: 'Citizen Kane', year: 1941 },
-    { title: 'North by Northwest', year: 1959 },
-    { title: 'Vertigo', year: 1958 },
-    {
-      title: 'Star Wars: Episode VI - Return of the Jedi',
-      year: 1983,
-    },
-    { title: 'Reservoir Dogs', year: 1992 },
-    { title: 'Braveheart', year: 1995 },
-    { title: 'M', year: 1931 },
-    { title: 'Requiem for a Dream', year: 2000 },
-    { title: 'Amélie', year: 2001 },
-    { title: 'A Clockwork Orange', year: 1971 },
-    { title: 'Like Stars on Earth', year: 2007 },
-    { title: 'Taxi Driver', year: 1976 },
-    { title: 'Lawrence of Arabia', year: 1962 },
-    { title: 'Double Indemnity', year: 1944 },
-    {
-      title: 'Eternal Sunshine of the Spotless Mind',
-      year: 2004,
-    },
-    { title: 'Amadeus', year: 1984 },
-    { title: 'To Kill a Mockingbird', year: 1962 },
-    { title: 'Toy Story 3', year: 2010 },
-    { title: 'Logan', year: 2017 },
-    { title: 'Full Metal Jacket', year: 1987 },
-    { title: 'Dangal', year: 2016 },
-    { title: 'The Sting', year: 1973 },
-    { title: '2001: A Space Odyssey', year: 1968 },
-    { title: "Singin' in the Rain", year: 1952 },
-    { title: 'Toy Story', year: 1995 },
-    { title: 'Bicycle Thieves', year: 1948 },
-    { title: 'The Kid', year: 1921 },
-    { title: 'Inglourious Basterds', year: 2009 },
-    { title: 'Snatch', year: 2000 },
-    { title: '3 Idiots', year: 2009 },
-    { title: 'Monty Python and the Holy Grail', year: 1975 },
-  ];
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMoreData, setHasMoreData] = React.useState(true);
+  const [filters, setFilters] = useState({});
+  const [filteredJobs, setFilteredJobs] = useState(jobs.slice(0, 10));
+  const itemsPerPage = 10;
+
   const styles = css({
     padding: 5,
     display: 'grid',
@@ -1118,13 +1000,142 @@ const Layout = () => {
     },
   });
 
+  const filterJobs = useMemo(() => {
+    return job => {
+      return Object.entries(filters).every(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value.includes(job[key]);
+        } else {
+          return value === undefined || value === null || job[key] === value;
+        }
+      });
+    };
+  }, [filters]);
+
+  function handleFilterChange(filterKey, value) {
+    if (value === null || value === undefined || value.length === 0) {
+      setFilters(prevFilters => {
+        const updatedFilters = { ...prevFilters };
+        delete updatedFilters[filterKey];
+        return updatedFilters;
+      });
+    } else {
+      setFilters(prevFilters => ({ ...prevFilters, [filterKey]: value }));
+    }
+  }
+
+  useEffect(() => {
+    const updatedFilteredJobs = jobs.filter(filterJobs);
+    setFilteredJobs(updatedFilteredJobs);
+  }, [filters]);
+
+  const jobroles = ['frontend', 'backend', 'android', 'ios'];
+  const exp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const location = [
+    'remote',
+    'delhi ncr',
+    'mumbai',
+    'chennai',
+    'bangalore',
+    'chennai',
+  ];
+  const basePay = [3, 9, 10, 14, 16, 18, 26, 33, 34, 35, 44, 72, 66, 100, 102];
+
+  const handleScroll = () => {
+    debugger;
+    const startIndex = (currentPage + 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    if (startIndex < jobs.length) {
+      debugger;
+      const nextPageItems = jobs.slice(startIndex, endIndex);
+
+      setFilteredJobs(prevJobs => [...prevJobs, ...nextPageItems]);
+
+      setCurrentPage(prevPage => prevPage + 1);
+    } else {
+      setHasMoreData(false);
+    }
+  };
   return (
     <Grid>
-      <Box item md={12} sx={styles}>
-        {filteredJobs?.map(jd => (
-          <JobsCard key={jd.jdUid} jobDetails={jd} />
-        ))}
-      </Box>
+      <Stack direction='row' flex={'wrap'}>
+        <CustomAutoComplete
+          multiple
+          size='md'
+          key='roles'
+          placeholder='Roles'
+          sx={{ mr: 2 }}
+          options={jobroles}
+          getOptionLabel={option => option}
+          onChange={(event, newValue) => {
+            handleFilterChange('jobRole', newValue);
+          }}
+        />
+        <Select
+          placeholder='Select Minimum Experience'
+          size='sm'
+          key='minExp'
+          endDecorator={'|'}
+          sx={{ mr: 2 }}
+          onChange={(event, newValue) => {
+            handleFilterChange('minExp', newValue);
+          }}
+        >
+          {exp.map(exper => (
+            <Option value={exper}>{exper}</Option>
+          ))}
+        </Select>
+        <CustomAutoComplete
+          multiple
+          size='md'
+          placeholder='Location'
+          key='Location'
+          options={location}
+          sx={{ mr: 2 }}
+          getOptionLabel={option => option}
+          onChange={(event, newValue) => {
+            handleFilterChange('location', newValue);
+          }}
+        />
+        <Select
+          placeholder='Min Base Pay '
+          size='sm'
+          key='minJdSalary  '
+          endDecorator={'|'}
+          sx={{ mr: 2 }}
+          onChange={(event, newValue) => {
+            handleFilterChange('minJdSalary', newValue);
+          }}
+        >
+          {basePay.map(basePay => (
+            <Option value={basePay}>{basePay}L</Option>
+          ))}
+        </Select>
+        <TextField
+          id='outlined-basic'
+          placeholder='Search company Name'
+          variant='outlined'
+          size='small'
+          sx={{ mr: 2 }}
+          onChange={event => {
+            handleFilterChange('companyName', event.target.value);
+          }}
+        />
+      </Stack>
+      <InfiniteScroll
+        dataLength={65}
+        next={handleScroll}
+        hasMore={true}
+        loader={<p>Loading...</p>}
+        endMessage={<p>No more data to load.</p>}
+      >
+        <Box item md={12} sx={styles}>
+          {filteredJobs?.map(jd => (
+            <JobsCard key={jd.jdUid} jobDetails={jd} />
+          ))}
+        </Box>
+      </InfiniteScroll>
     </Grid>
   );
 };
